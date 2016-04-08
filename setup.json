@@ -1,13 +1,13 @@
 {
   "name": "bf",
   "version": "0.1",
-  "description": "Black Earth file interface library",
+  "description": "File interface library",
   "url": "https://github.com/BlackEarth/bf",
   "author": "Sean Harrison",
   "author_email": "sah@blackearthgroup.com",
   "license": "LGPL 3.0",
   "classifiers": [
-    "Development Status :: 1 - Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
     "Programming Language :: Python :: 3"
