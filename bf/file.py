@@ -1,11 +1,10 @@
 
-DEBUG = False
-
 import os, subprocess, time
 from bl.dict import Dict
+from bl.log import Log
 
 class File(Dict):
-    def __init__(self, fn=None, log=print, **args):
+    def __init__(self, fn=None, log=Log(), **args):
         if type(fn)==str: fn=fn.strip().replace('\\ ', ' ')
         Dict.__init__(self, fn=fn, log=log, **args)
 
@@ -27,7 +26,6 @@ class File(Dict):
         subprocess.call(['open', fn], shell=True)
 
     def read(self, mode='rb'):
-        if DEBUG==True: self.log("File.read(mode='%s'):" % mode, self.fn )
         with open(self.fn, mode) as f:
             data = f.read()
         return data
@@ -57,8 +55,6 @@ class File(Dict):
     def write(self, fn=None, data=None, mode='wb', 
                 max_tries=3):                   # sometimes there's a disk error on SSD, so try 3x
         outfn = fn or self.fn
-        if DEBUG==True: 
-            self.log("File.write():\n\tfilename:", self.fn, '\n\toutputfn:', outfn)
         if not os.path.exists(os.path.dirname(outfn)):
             os.makedirs(os.path.dirname(outfn))
         def try_write(b=None, tries=0):         

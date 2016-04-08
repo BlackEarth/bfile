@@ -1,10 +1,11 @@
 
 import os, shutil, tempfile
 from bl.file import File
+from bl.log import Log
 
 class Text(File):
 
-    def __init__(self, fn=None, text=None, encoding='UTF-8', log=print, **args):
+    def __init__(self, fn=None, text=None, encoding='UTF-8', log=Log(), **args):
         File.__init__(self, fn=fn, encoding=encoding, log=log, **args)
         if text is not None:
             self.text = text

@@ -6,10 +6,10 @@ from .file import File
 
 class PDF(File):
 
-    def gswrite(self, fn=None, device='jpeg', res=1200, alpha=2, quality=90, **resources):
+    def gswrite(self, fn=None, device='jpeg', res=1200, alpha=2, quality=90, gs=None, **resources):
         "use ghostscript to create output file(s) from the PDF"
         if fn is None: 
-            fn = os.path.splitext(self.fn)[0]+GS_DEVICE_EXTENSIONS[device]
+            fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
         gs = (resources.get('gs') or self.gs or 'gs')
         callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
                     '-sDEVICE=%s' % device,
