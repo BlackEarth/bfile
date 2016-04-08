@@ -1,2 +1,2 @@
-# bfile
+# bf
 file interface library
