@@ -2,7 +2,7 @@
 DEBUG = False
 
 from lxml import etree, cssselect
-from bl.text import Text
+from bf.text import Text
 
 class CSS(Text):
 

@@ -6,7 +6,7 @@ import sass                 # pip install sass
 from unum import Unum       # pip install unum
 from bl.dict import Dict    # ordered dict with string keys
 from bl.string import String
-from bl.text import Text
+from bf.text import Text
 
 Unum.UNIT_FORMAT = "%s"
 Unum.UNIT_INDENT = ""

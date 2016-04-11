@@ -1,6 +1,6 @@
 
 import os, shutil, tempfile
-from bl.file import File
+from bf.file import File
 from bl.log import Log
 
 class Text(File):

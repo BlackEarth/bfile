@@ -8,8 +8,8 @@ from lxml import etree
 from bl.dict import Dict
 from bl.string import String
 from bl.zip import ZIP
-from bl.xml import XML
-from bl.text import Text
+from bxml.xml import XML
+from bf.text import Text
 
 class DOCX(ZIP):
     NS = Dict(**{

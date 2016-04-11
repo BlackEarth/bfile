@@ -1,6 +1,6 @@
 
 import json, os, shutil, tempfile
-from bl.file import File
+from bf.file import File
 from bl.dict import Dict
 
 class JSON(File):
