@@ -1,6 +1,6 @@
 {
   "name": "bf",
-  "version": "0.2",
+  "version": "0.3.0",
   "description": "File interface library",
   "url": "https://github.com/BlackEarth/bf",
   "author": "Sean Harrison",
@@ -13,7 +13,7 @@
     "Programming Language :: Python :: 3"
   ],
   "entry_points": {},
-  "install_requires": ["bl", "unum"],
+  "install_requires": ["bl", "unum", "lxml"],
   "extras_require": {
     "dev": [],
     "test": []
