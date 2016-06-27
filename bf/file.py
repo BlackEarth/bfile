@@ -4,9 +4,9 @@ from bl.dict import Dict
 from bl.log import Log
 
 class File(Dict):
-    def __init__(self, fn=None, log=Log(), **args):
+    def __init__(self, fn=None, data=None, log=Log(), **args):
         if type(fn)==str: fn=fn.strip().replace('\\ ', ' ')
-        Dict.__init__(self, fn=fn, log=log, **args)
+        Dict.__init__(self, fn=fn, data=data, log=log, **args)
 
     def __repr__(self):
         return "%s(fn=%r)" % (
@@ -57,15 +57,15 @@ class File(Dict):
         outfn = fn or self.fn
         if not os.path.exists(os.path.dirname(outfn)):
             os.makedirs(os.path.dirname(outfn))
-        def try_write(b=None, tries=0):         
+        def try_write(fd=None, tries=0):         
             try:
-                if b is None:
-                    if 'b' in mode:
-                        b=self.read(mode='rb')
+                if fd is None:
+                    if 'fd' in mode:
+                        fd=self.read(mode='rb')
                     else:
-                        b=self.read(mode='r')
+                        fd=self.read(mode='r')
                 f = open(outfn, mode)
-                f.write(b)
+                f.write(fd)
                 f.close()
             except: 
                 if tries < max_tries:
@@ -73,4 +73,4 @@ class File(Dict):
                     try_write(tries=tries+1)
                 else:
                     raise
-        try_write(b=data, tries=0)
+        try_write(fd=data or self.data, tries=0)
