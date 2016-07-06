@@ -235,8 +235,8 @@ class DOCX(ZIP):
     def stylesheet(self, fn=None, log=print):
         "create an SCSS stylesheet in a Text document, using DOCX.stylemap(), above."
         from bf import scss
-        SPACE_PTS_FACTOR = 1/30.  # divide Word space values by 20 to get the number of points
-        FONT_PTS_FACTOR = 1/2.    # divide Word font size values by 2 to get the number of points
+        SPACE_EMS_FACTOR = 1/360.  # divide Word space values by 360 to get the number of ems
+        FONT_EMS_FACTOR = 1/24.    # divide Word font size values by 24 to get the number of ems
         styles = self.stylemap(definitions=True, all=True, cache=False)
         all_styles = self.stylemap(all=False, cache=False)
         ss = scss.SCSS(fn=fn or (self.fn and self.fn.replace('.docx', '.scss')) or None)
@@ -262,13 +262,13 @@ class DOCX(ZIP):
                 if j == 'spacing':
                     for k in prop.keys():
                         if k=='after': 
-                            ss.styles[sel]["margin-bottom:"] = DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["margin-bottom:"] = DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k=='before': 
-                            ss.styles[sel]["margin-top:"] = DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["margin-top:"] = DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k in ['beforeAutospacing', 'afterAutospacing']:
                             pass
                         elif k=='line':
-                            ss.styles[sel]["line-spacing:"] = DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["line-spacing:"] = DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k=='lineRule':
                             pass
                         else:
@@ -285,7 +285,7 @@ class DOCX(ZIP):
                 elif j in ['sz', 'szCs']:
                     for k in prop.keys():
                         if k=='val':
-                            ss.styles[sel]["font-size:"] = DOCX.value_to(prop[k], scss.pt, factor=FONT_PTS_FACTOR)
+                            ss.styles[sel]["font-size:"] = DOCX.value_to(prop[k], scss.em, factor=FONT_EMS_FACTOR)
                         else:
                             log(i, j, k, prop[k])
                 elif j=='rFonts':
@@ -298,18 +298,18 @@ class DOCX(ZIP):
                 elif j=='ind':
                     for k in prop.keys():
                         if k=='firstLine':
-                            ss.styles[sel]["text-indent:"] = DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["text-indent:"] = DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k=='left':
                             if ss.styles[sel].get("margin-left:") is None:
                                 ss.styles[sel]["margin-left:"] = 0*scss.pt
-                            ss.styles[sel]["margin-left:"] += DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["margin-left:"] += DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k=='right':
-                            ss.styles[sel]["margin-right:"] = DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["margin-right:"] = DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         elif k=='hanging':
                             if ss.styles[sel].get("margin-left:") is None:
                                 ss.styles[sel]["margin-left:"] = 0*scss.pt
-                            ss.styles[sel]["margin-left:"] += DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
-                            ss.styles[sel]["text-indent:"] = -DOCX.value_to(prop[k], scss.pt, factor=SPACE_PTS_FACTOR)
+                            ss.styles[sel]["margin-left:"] += DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
+                            ss.styles[sel]["text-indent:"] = -DOCX.value_to(prop[k], scss.em, factor=SPACE_EMS_FACTOR)
                         else:
                             log(i, j, k, prop[k])
                 elif j in ['b', 'bCs']:
