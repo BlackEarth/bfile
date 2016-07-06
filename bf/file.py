@@ -60,7 +60,7 @@ class File(Dict):
         def try_write(fd=None, tries=0):         
             try:
                 if fd is None:
-                    if 'fd' in mode:
+                    if 'b' in mode:
                         fd=self.read(mode='rb')
                     else:
                         fd=self.read(mode='r')
