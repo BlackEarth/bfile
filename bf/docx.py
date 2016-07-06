@@ -228,13 +228,13 @@ class DOCX(ZIP):
     @classmethod
     def value_to(C, val, unit, factor=1.):
         "converts a Word value to a given unit, using the factor given"
-        from bl import scss
+        from bf import scss
         val = float(val) * factor
         return round(float(val*scss.pt/unit), 2)*unit
 
     def stylesheet(self, fn=None, log=print):
         "create an SCSS stylesheet in a Text document, using DOCX.stylemap(), above."
-        from bl import scss
+        from bf import scss
         SPACE_PTS_FACTOR = 1/30.  # divide Word space values by 20 to get the number of points
         FONT_PTS_FACTOR = 1/2.    # divide Word font size values by 2 to get the number of points
         styles = self.stylemap(definitions=True, all=True, cache=False)
@@ -373,4 +373,4 @@ class DOCX(ZIP):
                     pass
                 else:
                     log(i, j, prop)
-        return ss
+        return ss.render_css()
