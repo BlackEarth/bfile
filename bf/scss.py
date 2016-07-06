@@ -56,7 +56,7 @@ class SCSS(Text):
 
     def render_css(self, fn=None, text=None):
         """output css using the Sass processor"""
-        from bl.css import CSS
+        from bf.css import CSS
         c = CSS(fn=fn or os.path.splitext(self.fn)[0]+'.css')
         if not os.path.exists(os.path.dirname(c.fn)):
             os.makedirs(os.path.dirname(c.fn))
