@@ -81,3 +81,5 @@ class Image(File):
             if o!='': print(o)
             if DEBUG==True: print('\n', outfn, '\n  ', w, h, w*h, maxpixels, downratio, geom_arg)
 
+        return outfn
+
