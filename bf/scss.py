@@ -51,8 +51,8 @@ class SCSS(Text):
         if self.styles is None:
             self.styles = Styles()
 
-    def write(self, fn=None, text=None, **args):
-        Text.write(self, fn=fn, text=text, **args)
+    def write(self, fn=None):
+        Text.write(self, fn=fn, text=self.render(self.styles))
 
     def render_css(self, fn=None, text=None):
         """output css using the Sass processor"""
