@@ -2,6 +2,7 @@
 import os, shutil, tempfile
 from bf.file import File
 from bl.log import Log
+from bl.string import String
 
 class Text(File):
 
@@ -10,9 +11,9 @@ class Text(File):
         if text is not None:
             self.text = text
         elif fn is not None and os.path.exists(fn):
-            self.text = self.read().decode(encoding)
+            self.text = String(self.read().decode(encoding))
         else:
-            self.text = ""
+            self.text = String("")
 
     def write(self, fn=None, text=None, encoding=None, **args):
         data = (text or self.text or '').encode(encoding or self.encoding)
