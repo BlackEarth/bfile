@@ -1,6 +1,4 @@
 
-DEBUG=False
-
 import os, sys, subprocess
 from .file import File
 
@@ -23,8 +21,8 @@ class PDF(File):
         try:
             subprocess.check_output(callargs)
         except subprocess.CalledProcessError as e:
-            self.log(' '.join(callargs))
-            self.log(str(e.output, 'utf-8'), file=sys.stderr)
+            print(' '.join(callargs))
+            print(str(e.output, 'utf-8'), file=sys.stderr)
         return fn
 
 
