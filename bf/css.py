@@ -1,7 +1,7 @@
 
 DEBUG = False
 
-from lxml import etree, cssselect
+import cssselect
 from bl.text import Text
 
 class CSS(Text):
@@ -12,8 +12,8 @@ class CSS(Text):
     @classmethod
     def selector_to_xpath(cls, selector, xmlns=None):
         """convert a css selector into an xpath expression. 
-        xmlns is option single-item dict with namespace prefix and href"""
-
+            xmlns is option single-item dict with namespace prefix and href
+        """
         selector = selector.replace(' .', ' *.')
         if selector[0] == '.':
             selector = '*' + selector
