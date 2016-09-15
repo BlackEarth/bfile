@@ -13,7 +13,7 @@
     "Programming Language :: Python :: 3"
   ],
   "entry_points": {},
-  "install_requires": ["bl", "unum", "lxml", "cssselect"],
+  "install_requires": ["bl", "unum", "cssselect", "sass"],
   "extras_require": {
     "dev": [],
     "test": []

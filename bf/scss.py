@@ -1,12 +1,12 @@
 
-DEBUG = False
-
-import os, re, sys
+import os, re, sys, logging
 import sass                 # pip install sass
 from unum import Unum       # pip install unum
 from bl.dict import Dict    # ordered dict with string keys
 from bl.string import String
 from bl.text import Text
+
+LOG = logging.getLogger(__file__)
 
 Unum.UNIT_FORMAT = "%s"
 Unum.UNIT_INDENT = ""
@@ -21,24 +21,22 @@ pi = Unum.unit('pi', 12.*pt)
 percent = Unum.unit('%', 0.01*em)
     
 class Styles(Dict):
-    def keys(self):
-        """Sort the keys: Alphabetical, except if a rule @extend a base rule, the base rule is earlier."""
-        alpha_keys = Dict.keys(self)    # Dict.keys() does alphabetical sort
-        sorted_keys = []
-        while len(alpha_keys) > 0:
-            key = alpha_keys[0]
-            style = self[key]
-            if DEBUG==True: print(key, end=' ')
-            while style.get('@extend') is not None:
-                next_key = style.get('@extend').strip(' ;')
-                if next_key in sorted_keys: break
-                key = next_key
-                style = self[key]
-                if DEBUG==True: print('@extend', key, end=' ')
-            sorted_keys.append(key)
-            _ = alpha_keys.pop(alpha_keys.index(key))
-            if DEBUG==True: print()
-        return sorted_keys
+    pass
+    # def keys(self):
+    #     """Sort the keys: Alphabetical, except if a rule @extend a base rule, the base rule is earlier."""
+    #     alpha_keys = Dict(**self).keys()    # Dict.keys() does alphabetical sort
+    #     sorted_keys = []
+    #     while len(alpha_keys) > 0:
+    #         key = alpha_keys[0]
+    #         style = self[key]
+    #         while style.get('@extend') is not None:
+    #             next_key = style.get('@extend').strip(' ;')
+    #             if next_key in sorted_keys: break
+    #             key = next_key
+    #             style = self[key]
+    #         sorted_keys.append(key)
+    #         _ = alpha_keys.pop(alpha_keys.index(key))
+    #     return sorted_keys
 
 class SCSS(Text):
     # the style rules are keys in the "styles" dict. This is limiting, but it works --  
@@ -48,37 +46,34 @@ class SCSS(Text):
     def __init__(self, **args):
         # TODO: add parsing of text input into self.styles
         Text.__init__(self, **args)
+        self.text = None
         if self.styles is None:
             self.styles = Styles()
 
     def write(self, fn=None):
-        Text.write(self, fn=fn, text=self.render(self.styles))
+        Text.write(self, fn=fn, text=self.render_styles())
 
     def render_css(self, fn=None, text=None):
         """output css using the Sass processor"""
         from bf.css import CSS
-        c = CSS(fn=fn or os.path.splitext(self.fn)[0]+'.css')
-        if not os.path.exists(os.path.dirname(c.fn)):
-            os.makedirs(os.path.dirname(c.fn))
-        # the following is necessary in order for scss to relative @import
-        os.chdir(os.path.dirname(c.fn)) 
-        # grumble about the use of bytes rather than unicode.
-        b = bytes(text or self.text or self.render(self.styles), 'utf-8') 
-        if len(b)==0: 
-            c.text = ''
-        else: 
-            try:
-                c.text = sass.compile(string=b)
-            except:
-                c.text = sass.compile_string(b).decode('utf-8')
+        fn = fn or os.path.splitext(self.fn)[0]+'.css'
+        if not os.path.exists(os.path.dirname(fn)):
+            os.makedirs(os.path.dirname(fn))
+        os.chdir(os.path.dirname(fn))               # needed in order for scss to relative @import
+        c = CSS(fn=fn, text='')
+        t = text or self.render(self.styles)
+        c.text = sass.compile_string(t.encode('UTF-8')).decode('UTF-8')
         return c
     
+    def render_styles(self, margin="", indent="\t"):
+        return self.render(self.styles)
+
     @classmethod    
     def render(c, styles, margin="", indent="\t"):
         """output scss text from styles. 
         margin is what to put at the beginning of every line in the output.
         indent is how much to indent indented lines (such as inside braces)."""
-        
+
         def render_dict(d):
             return ('{\n' 
                     + c.render(styles[k], 
@@ -89,7 +84,7 @@ class SCSS(Text):
         # render the scss text
         s = ""
         for k in styles.keys():
-            if DEBUG==True: print(margin, k, styles[k])
+            LOG.debug(margin, k, styles[k])
             s += margin + k + ' '
             if type(styles[k]) in [str, String]:
                 s += styles[k] + ';'
@@ -106,7 +101,7 @@ class SCSS(Text):
                     elif type(i) in [dict, Dict]:
                         s += render_dict(i)
             else:
-                print(margin, type(styles[k]), k, styles[k], file=sys.stderr)
+                LOG.debug(margin, type(styles[k]), k, styles[k], file=sys.stderr)
                 s += ';'
             s += '\n'
         return s
