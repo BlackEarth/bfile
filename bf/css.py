@@ -1,7 +1,7 @@
 
 DEBUG = False
 
-from lxml import etree, cssselect
+import cssselect
 from bl.text import Text
 
 class CSS(Text):
