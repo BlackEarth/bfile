@@ -1,6 +1,6 @@
 
 import os, sys, subprocess
-from .file import File
+from bl.file import File
 
 class PDF(File):
 

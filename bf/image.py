@@ -21,12 +21,16 @@ class Image(File):
     def identify(self, **params):
         return self.gm('identify', **params)
 
-    def convert(self, outfn, **params):
+    def convert(self, outfn=None, **params):
         args = ['gm', 'convert', self.fn]
+        if outfn is None: 
+            outfn = self.fn
         for key in params.keys():
             args += ['-'+key, str(params[key])]
         args += [outfn]
         if DEBUG==True: print(args)
+        if not os.path.exists(os.path.dirname(outfn)):
+            os.makedirs(os.path.dirname(outfn))
         o = subprocess.check_output(args).decode('utf8')
         return o.strip()
                 
