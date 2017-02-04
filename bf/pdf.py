@@ -1,5 +1,6 @@
 
 import os, sys, subprocess
+from glob import glob
 from bl.file import File
 import re
 
@@ -13,7 +14,6 @@ class PDF(File):
             fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
         pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
                 "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
-        print(pages, 'pages')
         if pages > 1:
             # add a counter to the filename, which tells gs to create a file for every page in the input
             fb, ext = os.path.splitext(fn)
@@ -23,7 +23,8 @@ class PDF(File):
         callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
                     '-sDEVICE=%s' % device,
                     '-r%d' % res]
-        if device=='jpeg': callargs += ['-dJPEGQ=%d' % quality]
+        if device=='jpeg': 
+            callargs += ['-dJPEGQ=%d' % quality]
         if 'png' in device or 'jpeg' in device or 'tiff' in device: 
             callargs += [
                 '-dTextAlphaBits=%d' % alpha,
@@ -35,7 +36,8 @@ class PDF(File):
         except subprocess.CalledProcessError as e:
             print(' '.join(callargs))
             print(str(e.output, 'utf-8'), file=sys.stderr)
-        return fn
+        fns = glob(re.sub('%\d+d','*', fn))
+        return fns
 
 
 GS_DEVICE_EXTENSIONS = {
