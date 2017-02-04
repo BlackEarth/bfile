@@ -1,14 +1,25 @@
 
 import os, sys, subprocess
 from bl.file import File
+import re
 
 class PDF(File):
 
-    def gswrite(self, fn=None, device='jpeg', res=1200, alpha=2, quality=90, gs=None, **resources):
+    def gswrite(self, fn=None, device='jpeg', res=600, alpha=2, quality=90, gs=None):
         "use ghostscript to create output file(s) from the PDF"
+        gs = (gs or self.gs or 'gs')
+        # count the number of pages
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
-        gs = (resources.get('gs') or self.gs or 'gs')
+        pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
+                "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
+        print(pages, 'pages')
+        if pages > 1:
+            # add a counter to the filename, which tells gs to create a file for every page in the input
+            fb, ext = os.path.splitext(fn)
+            n = len(re.split('.', str(pages))) - 1
+            counter = "-%%0%dd" % n
+            fn = fb + counter + ext
         callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
                     '-sDEVICE=%s' % device,
                     '-r%d' % res]
