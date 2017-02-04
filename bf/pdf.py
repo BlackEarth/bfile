@@ -5,7 +5,7 @@ import re
 
 class PDF(File):
 
-    def gswrite(self, fn=None, device='jpeg', res=600, alpha=2, quality=90, gs=None):
+    def gswrite(self, fn=None, device='jpeg', res=600, alpha=4, quality=90, gs=None):
         "use ghostscript to create output file(s) from the PDF"
         gs = (gs or self.gs or 'gs')
         # count the number of pages
@@ -24,9 +24,10 @@ class PDF(File):
                     '-sDEVICE=%s' % device,
                     '-r%d' % res]
         if device=='jpeg': callargs += ['-dJPEGQ=%d' % quality]
-        if 'png' in device: callargs += [
-            '-dTextAlphaBits=%d' % alpha,
-            '-dGraphicsAlphaBits=%d' % alpha]
+        if 'png' in device or 'jpeg' in device or 'tiff' in device: 
+            callargs += [
+                '-dTextAlphaBits=%d' % alpha,
+                '-dGraphicsAlphaBits=%d' % alpha]
         callargs += ['-sOutputFile=%s' % fn,
                     self.fn]
         try:
