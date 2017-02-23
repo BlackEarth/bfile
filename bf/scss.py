@@ -1,6 +1,6 @@
 
 import os, re, sys, logging
-import sass                 # pip install sass
+import sass                 # pip install libsass
 from unum import Unum       # pip install unum
 from bl.dict import Dict    # ordered dict with string keys
 from bl.string import String
@@ -62,7 +62,7 @@ class SCSS(Text):
         os.chdir(os.path.dirname(fn))               # needed in order for scss to relative @import
         c = CSS(fn=fn, text='')
         t = text or self.render(self.styles)
-        c.text = sass.compile_string(t.encode('UTF-8')).decode('UTF-8')
+        c.text = sass.compile(t)
         return c
     
     def render_styles(self, margin="", indent="\t"):
