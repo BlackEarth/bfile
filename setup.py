@@ -1,4 +1,32 @@
 
+config = {
+  "name": "bf",
+  "version": "1.0.0",
+  "description": "File interface library",
+  "url": "https://github.com/BlackEarth/bf",
+  "author": "Sean Harrison",
+  "author_email": "sah@blackearthgroup.com",
+  "license": "LGPL 3.0",
+  "classifiers": [
+    "Development Status :: 5 - Production",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "Programming Language :: Python :: 3"
+  ],
+  "entry_points": {},
+  "install_requires": ["bl", "unum", "cssselect", "libsass"],
+  "extras_require": {
+    "dev": [],
+    "test": []
+  },
+  "package_data": {
+    "": ["*.jar", "*.sql", "*.xml", "*.xsl", "*.md", "*.TEMPLATE"]
+    },
+  "data_files": [],
+  "scripts": []
+}
+
+
 import os, json
 from setuptools import setup, find_packages
 from codecs import open
