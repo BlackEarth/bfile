@@ -14,7 +14,7 @@ config = {
     "Programming Language :: Python :: 3"
   ],
   "entry_points": {},
-  "install_requires": ["bl", "unum", "cssselect", "libsass"],
+  "install_requires": ["bl", "unum", "cssselect", "cssutils", "libsass"],
   "extras_require": {
     "dev": [],
     "test": []

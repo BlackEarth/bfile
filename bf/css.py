@@ -1,13 +1,64 @@
 
-DEBUG = False
+import logging
+log = logging.getLogger(__name__)
 
+import os
 import cssselect
+from unum import Unum       # pip install unum
 from bl.text import Text
+from .styles import Styles
+
+Unum.UNIT_FORMAT = "%s"
+Unum.UNIT_INDENT = ""
+Unum.VALUE_FORMAT = "%s"
 
 class CSS(Text):
+    """
+    CSS.styles: the style rules are keys in the "styles" dict. This is limiting, but it works --  
+        it happens to result in things being ordered correctly (with @-rules first), and 
+        it allows us to effectively query and manipulate the contents of the stylesheet at any time.
+    CSS.pt, CSS.px, CSS.em, CSS.en, CSS.inch, CSS.pi, CSS.percent: 
+        All the main units are supported and are defined in terms of points, with 1.0em = 12.0pt
+    """
+    pt = Unum.unit('pt')
+    px = Unum.unit('px', 0.75*pt)
+    em = Unum.unit('em', 12.*pt)
+    en = Unum.unit('en', 6.*pt)
+    inch = Unum.unit('in', 72.*pt)
+    pi = Unum.unit('pi', 12.*pt)
+    percent = Unum.unit('%', 0.01*em)
 
-    def __init__(self, **args):
-        Text.__init__(self, **args)
+    def __init__(self, fn=None, styles=None, text=None, encoding='UTF-8', **args):
+        Text.__init__(self, fn=fn, encoding=encoding, **args)
+        if styles is not None:
+            self.styles = styles
+        elif fn is not None and os.path.exists(fn):
+            self.styles = Styles.from_css(open(fn, 'rb').read().decode(encoding))
+        elif text is not None:
+            self.styles = Styles.from_css(text)
+        else:
+            self.styles = Styles()
+
+    def render_styles(self, margin='', indent='\t'):
+        return Styles.render(self.styles, margin=margin, indent=indent)
+
+    def write(self, fn=None, encoding='UTF-8', **args):
+        text = Styles.render(self.styles)
+        Text.write(self, fn=fn, text=text)
+
+    @classmethod
+    def merge_stylesheets(Class, fn, cssfns):
+        """merge the given CSS files, in order, into a single stylesheet"""
+        stylesheet = Class(fn=fn)
+        for cssfn in cssfns:
+            css = Class(fn=cssfn)
+            for sel in sorted(css.styles.keys()):
+                if sel not in stylesheet.styles:
+                    stylesheet.styles[sel] = css.styles[sel]
+                elif stylesheet.styles[sel] != css.styles[sel]:
+                    log.warn("sel %r not equivalent:\n\t%s\n\t%s" % (sel, stylesheet.fn, css.fn))
+                    log.warn("\n\t%r\n\t%r" % (stylesheet.styles[sel], css.styles[sel]))
+        return stylesheet
 
     @classmethod
     def selector_to_xpath(cls, selector, xmlns=None):
@@ -17,11 +68,11 @@ class CSS(Text):
         selector = selector.replace(' .', ' *.')
         if selector[0] == '.':
             selector = '*' + selector
-            if DEBUG==True: print('', selector)
+            log.debug(selector)
         
         if '#' in selector:
             selector = selector.replace('#', '*#')
-            if DEBUG==True: print('', selector)
+            log.debug(selector)
 
         if xmlns is not None:
             prefix = xmlns.keys()[0]
@@ -30,42 +81,12 @@ class CSS(Text):
                 (n.strip() != '>' and prefix + '|' + n.strip() or n.strip())
                 for n in selector.split(' ')
                 ])
-            if DEBUG==True: print('', selector)
+            log.debug(selector)
         
         path = cssselect.CSSSelector(selector, namespaces=xmlns).path
         path = path.replace("descendant-or-self::", "")
         path = path.replace("/descendant::", "//")
         
-        if DEBUG==True: print(' ==>', path)
+        log.debug(' ==> %s' % path)
         
         return path
-
-    # **NOTE: This procedure from the cssutils based version of this class will not work as-is**
-    # 
-    # def add_selectors_from(self, cssfns, verbose=False):
-    #     """add any selectors from cssfn that are missing in this CSS file -- append to the end"""
-    #     if type(cssfns) in [str, unicode]:
-    #         cssfns = [cssfns]
-    #     elif type(cssfns) != list:
-    #         raise TypeError('invalid type for cssfns parameter:' + str(type(cssfns)))
-
-    #     self_rules = [r for r in self.doc.cssRules if r.typeString=='STYLE_RULE']
-    #     self_selectors = []
-    #     for rule in self_rules:
-    #         for sel in rule.selectorList:
-    #             if sel.selectorText not in self_selectors: self_selectors.append(sel.selectorText)
-
-    #     for cssfn in cssfns:
-    #         if verbose==True: print(cssfn)
-    #         css = CSS(cssfn)
-    #         css_rules = [r for r in css.doc.cssRules if r.typeString=='STYLE_RULE']
-    #         css_selectors = []
-    #         for rule in css_rules:
-    #             for sel in rule.selectorList:
-    #                 if sel.selectorText not in css_selectors: css_selectors.append(sel.selectorText)
-    #         for sel in [sel for sel in css_selectors if sel not in self_selectors]:
-    #             new_rule = cssutils.css.CSSStyleRule(selectorText=sel, style=rule.style)
-    #             self.doc.cssRules.append(new_rule)
-    #             self_rules.append(new_rule)
-    #             self_selectors.append(sel)
-    #             if verbose==True: print(' ', sel)
