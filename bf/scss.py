@@ -16,8 +16,10 @@ class SCSS(CSS):
         fn = fn or os.path.splitext(self.fn)[0]+'.css'
         if not os.path.exists(os.path.dirname(fn)):
             os.makedirs(os.path.dirname(fn))
+        curdir = os.path.abspath(os.curdir)
         os.chdir(os.path.dirname(fn))               # needed in order for scss to relative @import
-        LOG.debug(self.render_styles())
-        return CSS(fn=fn, 
-            text=sass.compile(string=text or self.render_styles()))
+        text = text or self.render_styles()
+        if text != '': text = sass.compile(string=text)
+        os.chdir(curdir)
+        return CSS(fn=fn, text=text)
     

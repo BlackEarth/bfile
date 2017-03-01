@@ -2,10 +2,11 @@
 import logging
 log = logging.getLogger(__name__)
 
-import os
+import os, re, shutil
 import cssselect
 from unum import Unum       # pip install unum
 from bl.text import Text
+from bl.url import URL
 from .styles import Styles
 
 Unum.UNIT_FORMAT = "%s"
@@ -48,7 +49,8 @@ class CSS(Text):
 
     @classmethod
     def merge_stylesheets(Class, fn, cssfns):
-        """merge the given CSS files, in order, into a single stylesheet"""
+        """merge the given CSS files, in order, into a single stylesheet. First listed takes priority.
+        """
         stylesheet = Class(fn=fn)
         for cssfn in cssfns:
             css = Class(fn=cssfn)
