@@ -5,7 +5,7 @@ log = logging.getLogger(__name__)
 import os, re, shutil
 import cssselect
 from unum import Unum       # pip install unum
-from bl.text import Text
+from bl.file import File
 from bl.url import URL
 from .styles import Styles
 
@@ -13,7 +13,7 @@ Unum.UNIT_FORMAT = "%s"
 Unum.UNIT_INDENT = ""
 Unum.VALUE_FORMAT = "%s"
 
-class CSS(Text):
+class CSS(File):
     """
     CSS.styles: the style rules are keys in the "styles" dict. This is limiting, but it works --  
         it happens to result in things being ordered correctly (with @-rules first), and 
@@ -30,7 +30,7 @@ class CSS(Text):
     percent = Unum.unit('%', 0.01*em)
 
     def __init__(self, fn=None, styles=None, text=None, encoding='UTF-8', **args):
-        Text.__init__(self, fn=fn, encoding=encoding, **args)
+        File.__init__(self, fn=fn, encoding=encoding, **args)
         if styles is not None:
             self.styles = styles
         elif fn is not None and os.path.exists(fn):
@@ -44,8 +44,8 @@ class CSS(Text):
         return Styles.render(self.styles, margin=margin, indent=indent)
 
     def write(self, fn=None, encoding='UTF-8', **args):
-        text = Styles.render(self.styles)
-        Text.write(self, fn=fn, text=text)
+        text = self.render_styles()
+        File.write(self, fn=fn, data=text)
 
     @classmethod
     def merge_stylesheets(Class, fn, cssfns):
