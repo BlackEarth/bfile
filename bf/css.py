@@ -45,7 +45,7 @@ class CSS(File):
 
     def write(self, fn=None, encoding='UTF-8', **args):
         text = self.render_styles()
-        File.write(self, fn=fn, data=text)
+        File.write(self, fn=fn, data=text.encode(encoding))
 
     @classmethod
     def merge_stylesheets(Class, fn, cssfns):
