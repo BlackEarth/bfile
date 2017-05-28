@@ -38,7 +38,7 @@ extensions = ['sphinx.ext.autodoc',
 autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
-    'bl': ('http://bl.readthedocs.io', None),
+    'bl': ('http://bl.readthedocs.io/en/latest/', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
