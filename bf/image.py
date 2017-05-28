@@ -1,17 +1,20 @@
 
+import logging
+log = logging.getLogger(__name__)
+
 import math, os, shutil, sys, subprocess
 from bl.file import File
-
-DEBUG=False
 
 class Image(File):
 
     def gm(self, cmd, **params):
         args = ['gm', cmd]
         for key in params.keys():
-            args += ['-'+key, str(params[key])]
+            args += ['-'+key]
+            if str(params[key]) != "":
+                args += [str(params[key])]
         args += [self.fn]
-        if DEBUG==True: print(args)
+        log.debug("%r" % args)
         o = subprocess.check_output(args).decode('utf8')
         return o.strip()
 
@@ -28,9 +31,8 @@ class Image(File):
         for key in params.keys():
             args += ['-'+key, str(params[key])]
         args += [outfn]
-        if DEBUG==True: print(args)
+        log.debug("%r" % args)
         if not os.path.exists(os.path.dirname(outfn)):
             os.makedirs(os.path.dirname(outfn))
         o = subprocess.check_output(args).decode('utf8')
         return o.strip()
-                
