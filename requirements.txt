@@ -1,5 +1,5 @@
--e git+http://github.com/BlackEarth/bf@cd7c0e7b8b77ebfb8afe4a99b4a35e648be931fa#egg=bf
--e git+https://github.com/BlackEarth/bl.git@1a34b56d80314bd358641d0b882137186c5b09de#egg=bl
+-e git+https://github.com/BlackEarth/bf@cfcd7a6b5b24d544e8488e3969b42f43f7ba6497#egg=bf
+-e git+https://github.com/BlackEarth/bl.git@2308c85e2695ad16dbd4cd8cd740078d379091e9#egg=bl
 cssselect==0.9.2
 cssutils==1.0.1
 libsass==0.12.3
