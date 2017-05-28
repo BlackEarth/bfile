@@ -47,6 +47,7 @@ GS_DEVICE_EXTENSIONS = {
     'pngmono':'.png', 
     'pngmonod':'.png', 
     'pngalpha':'.png',
+    'pnggray':'.png',
     'jpeg':'.jpg', 
     'jpeggray':'.jpg',
     'tiffgray':'.tiff', 
