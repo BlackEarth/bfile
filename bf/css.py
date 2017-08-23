@@ -48,7 +48,7 @@ class CSS(File):
         File.write(self, fn=fn, data=text.encode(encoding))
 
     @classmethod
-    def merge_stylesheets(Class, fn, cssfns):
+    def merge_stylesheets(Class, fn, *cssfns):
         """merge the given CSS files, in order, into a single stylesheet. First listed takes priority.
         """
         stylesheet = Class(fn=fn)
@@ -57,9 +57,9 @@ class CSS(File):
             for sel in sorted(css.styles.keys()):
                 if sel not in stylesheet.styles:
                     stylesheet.styles[sel] = css.styles[sel]
-                elif stylesheet.styles[sel] != css.styles[sel]:
-                    log.warn("sel %r not equivalent:\n\t%s\n\t%s" % (sel, stylesheet.fn, css.fn))
-                    log.warn("\n\t%r\n\t%r" % (stylesheet.styles[sel], css.styles[sel]))
+                else: 
+                    for prop in [prop for prop in css.styles[sel] if prop not in stylesheet.styles[sel]]:
+                        stylesheet.styles[sel][prop] = css.styles[sel][prop]
         return stylesheet
 
     @classmethod
