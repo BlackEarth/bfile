@@ -23,7 +23,8 @@ class CSS(File):
     """
     pt = Unum.unit('pt')
     px = Unum.unit('px', 0.75*pt)
-    em = Unum.unit('rem', 12.*pt)
+    em = Unum.unit('em', 12.*pt)
+    rem = Unum.unit('rem', 12.*pt)
     en = Unum.unit('en', 6.*pt)
     inch = Unum.unit('in', 72.*pt)
     pi = Unum.unit('pi', 12.*pt)
