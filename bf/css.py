@@ -93,3 +93,30 @@ class CSS(File):
         log.debug(' ==> %s' % path)
         
         return path
+
+    @classmethod
+    def cmyk_to_rgb(Class, c, m, y, k):
+        """CMYK in % to RGB in 0-255
+        based on https://www.openprocessing.org/sketch/46231#
+        """
+        c = float(c)/100.0
+        m = float(m)/100.0
+        y = float(y)/100.0
+        k = float(k)/100.0
+
+        nc = (c * (1-k)) + k
+        nm = (m * (1-k)) + k
+        ny = (y * (1-k)) + k
+
+        r = int((1-nc) * 255)
+        g = int((1-nm) * 255)
+        b = int((1-ny) * 255)
+
+        return dict(r=r, g=g, b=b)
+
+    @classmethod
+    def rgb_to_hex(Class, r, g, b):
+        """RGB in 0-255 to hex (RRGGBB)"""
+        return ("%2s%2s%2s" % 
+                (hex(int(r)).lstrip('0x'), hex(int(g)).lstrip('0x'), hex(int(b)).lstrip('0x'))
+            ).replace(' ', '0').upper()
