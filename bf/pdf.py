@@ -20,9 +20,8 @@ class PDF(File):
             n = len(re.split('.', str(pages))) - 1
             counter = "-%%0%dd" % n
             fn = fb + counter + ext
-        callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
-                    '-sDEVICE=%s' % device,
-                    '-r%d' % res]
+        callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseArtBox',
+                    '-sDEVICE=%s' % device, '-r%d' % res]
         if device=='jpeg': 
             callargs += ['-dJPEGQ=%d' % quality]
         if 'png' in device or 'jpeg' in device or 'tiff' in device: 
