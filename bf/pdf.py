@@ -38,7 +38,6 @@ class PDF(File):
         fns = glob(re.sub('%\d+d','*', fn))
         return fns
 
-
 GS_DEVICE_EXTENSIONS = {
     'png16m':'.png', 
     'png256':'.png', 
@@ -71,5 +70,6 @@ GS_DEVICE_EXTENSIONS = {
     'txtwrite':'.txt',
     'psdcmyk':'.psd', 
     'psdrgb':'.psd',
+    'pdfwrite':'.pdf',
 }
 
