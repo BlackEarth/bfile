@@ -34,10 +34,10 @@ class CSS(File):
         File.__init__(self, fn=fn, encoding=encoding, **args)
         if styles is not None:
             self.styles = styles
-        elif fn is not None and os.path.exists(fn):
-            self.styles = Styles.from_css(open(fn, 'rb').read().decode(encoding))
         elif text is not None:
             self.styles = Styles.from_css(text)
+        elif fn is not None and os.path.exists(fn):
+            self.styles = Styles.from_css(open(fn, 'rb').read().decode(encoding))
         else:
             self.styles = Styles()
 
