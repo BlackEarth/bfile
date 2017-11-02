@@ -70,12 +70,6 @@ class Styles(Dict):
         indent is how much to indent indented lines (such as inside braces).
         """
         from unum import Unum
-        def render_dict(d):
-            return ('{\n' 
-                    + c.render(styles[k], 
-                        margin=margin+indent,   # add indent to margin
-                        indent=indent) 
-                    + '}\n')
         s = ""
         # render the css text
         for k in styles.keys():
@@ -93,7 +87,9 @@ class Styles(Dict):
                     if type(i) == bytes:
                         s += str(i, 'utf-8') + ' '
                     elif type(i) in [dict, Dict]:
-                        s += render_dict(i)
+                        s += '{\n' + c.render(i,    # recurse
+                            margin=margin+indent,   # add indent to margin
+                            indent=indent) + '}\n'
             else:
                 s += ';'
             s += '\n'
