@@ -64,7 +64,7 @@ class Styles(Dict):
         return styles
     
     @classmethod    
-    def render(c, styles, margin='', indent='\t'):
+    def render(C, styles, margin='', indent='\t'):
         """output css text from styles. 
         margin is what to put at the beginning of every line in the output.
         indent is how much to indent indented lines (such as inside braces).
@@ -79,7 +79,8 @@ class Styles(Dict):
             elif type(styles[k]) in [str, String]:
                 s += styles[k] + ';'
             elif type(styles[k]) in [dict, Dict]:
-                s += render_dict(styles[k])
+                # recurse
+                s += '{\n' + C.render(styles[k], margin=margin, indent=indent) + '}\n'
             elif type(styles[k]) in [tuple, list]:
                 for i in styles[k]:
                     if type(i) in [str, String]:
@@ -87,9 +88,8 @@ class Styles(Dict):
                     if type(i) == bytes:
                         s += str(i, 'utf-8') + ' '
                     elif type(i) in [dict, Dict]:
-                        s += '{\n' + c.render(i,    # recurse
-                            margin=margin+indent,   # add indent to margin
-                            indent=indent) + '}\n'
+                        # recurse
+                        s += '{\n' + C.render(i, margin=margin+indent, indent=indent) + '}\n'
             else:
                 s += ';'
             s += '\n'

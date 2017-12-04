@@ -1,8 +1,10 @@
 
-import os, sys, subprocess
+import logging, os, sys, subprocess
 from glob import glob
 from bl.file import File
 import re
+
+log = logging.getLogger(__name__)
 
 class PDF(File):
 
@@ -12,15 +14,18 @@ class PDF(File):
         # count the number of pages
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
-        pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
-                "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
+        if os.path.splitext(fn)[-1].lower()=='.pdf':
+            pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
+                    "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
+        else:
+            pages = 1
         if pages > 1:
             # add a counter to the filename, which tells gs to create a file for every page in the input
             fb, ext = os.path.splitext(fn)
             n = len(re.split('.', str(pages))) - 1
             counter = "-%%0%dd" % n
             fn = fb + counter + ext
-        callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseArtBox',
+        callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
                     '-sDEVICE=%s' % device, '-r%d' % res]
         if device=='jpeg': 
             callargs += ['-dJPEGQ=%d' % quality]
@@ -31,10 +36,11 @@ class PDF(File):
         callargs += ['-sOutputFile=%s' % fn,
                     self.fn]
         try:
+            log.debug(callargs)
             subprocess.check_output(callargs)
         except subprocess.CalledProcessError as e:
-            print(' '.join(callargs))
-            print(str(e.output, 'utf-8'), file=sys.stderr)
+            log.error(callargs)
+            log.error(str(e.output, 'utf-8'))
         fns = glob(re.sub('%\d+d','*', fn))
         return fns
 

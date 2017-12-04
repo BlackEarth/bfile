@@ -32,20 +32,15 @@ class Image(File):
         return o.strip()
 
     def mogrify(self, **params):
-        return self.im('mogrify', **params)
+        return self.gm('mogrify', **params)
 
     def identify(self, **params):
-        return self.im('identify', **params)
+        return self.gm('identify', **params)
 
     def convert(self, outfn=None, **params):
-        args = ['convert', self.fn]
-        if outfn is None: 
+        if outfn is not None and outfn != self.fn:
+            shutil.copy(self.fn, outfn)
+        else:
             outfn = self.fn
-        for key in params.keys():
-            args += ['-'+key, str(params[key])]
-        args += [outfn]
-        log.debug("%r" % args)
-        if not os.path.exists(os.path.dirname(outfn)):
-            os.makedirs(os.path.dirname(outfn))
-        o = subprocess.check_output(args).decode('utf8')
-        return o.strip()
+        res = Image(fn=outfn).mogrify(**params)
+        return outfn + ': ' + res
