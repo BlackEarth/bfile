@@ -14,6 +14,7 @@ class PDF(File):
         # count the number of pages
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
+        fn = File(fn=fn).fn     # normalize path
         if os.path.splitext(fn)[-1].lower()=='.pdf':
             pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
                     "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
@@ -35,6 +36,7 @@ class PDF(File):
                 '-dGraphicsAlphaBits=%d' % alpha]
         callargs += ['-sOutputFile=%s' % fn,
                     self.fn]
+
         try:
             log.debug(callargs)
             subprocess.check_output(callargs)
