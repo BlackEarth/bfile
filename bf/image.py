@@ -38,7 +38,7 @@ class Image(File):
         return self.gm('identify', **params)
 
     def convert(self, outfn=None, **params):
-        if outfn is not None and outfn != self.fn:
+        if outfn is not None and File(fn=outfn).fn != self.fn:
             shutil.copy(self.fn, outfn)
         else:
             outfn = self.fn
