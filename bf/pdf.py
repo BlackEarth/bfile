@@ -15,9 +15,12 @@ class PDF(File):
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
         fn = File(fn=fn).fn     # normalize path
-        if os.path.splitext(fn)[-1].lower()=='.pdf':
-            pages = int(subprocess.check_output([gs, '-q', '-dNODISPLAY', '-c', 
-                    "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]).decode('utf-8').strip())
+        if os.path.splitext(self.fn)[-1].lower()=='.pdf':
+            cmd = [gs, '-q', '-dNODISPLAY', '-c', 
+                    "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]
+            log.debug(cmd)
+            pages = int(subprocess.check_output(cmd).decode('utf-8').strip())
+            log.debug("%d page(s)" % pages)
         else:
             pages = 1
         if pages > 1:
@@ -26,7 +29,7 @@ class PDF(File):
             n = len(re.split('.', str(pages))) - 1
             counter = "-%%0%dd" % n
             fn = fb + counter + ext
-        callargs = [gs, '-dSAFER', '-dBATCH', '-dNOPAUSE',
+        callargs = [gs, '-q', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox',
                     '-sDEVICE=%s' % device, '-r%d' % res]
         if device=='jpeg': 
             callargs += ['-dJPEGQ=%d' % quality]
@@ -34,9 +37,7 @@ class PDF(File):
             callargs += [
                 '-dTextAlphaBits=%d' % alpha,
                 '-dGraphicsAlphaBits=%d' % alpha]
-        callargs += ['-sOutputFile=%s' % fn,
-                    self.fn]
-
+        callargs += ['-sOutputFile=%s' % fn, self.fn]
         try:
             log.debug(callargs)
             subprocess.check_output(callargs)
