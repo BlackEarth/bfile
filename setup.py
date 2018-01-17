@@ -1,7 +1,7 @@
 
 config = {
   "name": "bf",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "File interface library",
   "url": "https://github.com/BlackEarth/bf",
   "author": "Sean Harrison",
@@ -20,7 +20,7 @@ config = {
     "test": []
   },
   "package_data": {
-    "": ["*.jar", "*.sql", "*.xml", "*.xsl", "*.md", "*.TEMPLATE"]
+    "bf": []
     },
   "data_files": [],
   "scripts": []
