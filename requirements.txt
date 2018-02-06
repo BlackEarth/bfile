@@ -1,6 +1,6 @@
-bl==1.12.0
 cssselect
 cssutils
 libsass
 six
 Unum
+-e git+https://github.com/BlackEarth/bl.git@858401c26255e7e421c2baf34804c3b73bfe5363#egg=bl
