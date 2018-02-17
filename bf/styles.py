@@ -35,26 +35,32 @@ class Styles(Dict):
             
             elif rule.type==cssutils.css.CSSRule.IMPORT_RULE:
                 if styles.get('@import') is None: styles['@import'] = []
-                styles['@import'].append(Dict(href=rule.href))              # no support yet for media queries
-            
+                styles['@import'].append(Dict(href=rule.href))
+
             elif rule.type==cssutils.css.CSSRule.NAMESPACE_RULE:
-                pass
+                if styles.get('@namespace') is None: styles['@namespace'] = {}
+                styles['@namespace'][rule.prefix] = rule.namespaceURI
             
             elif rule.type==cssutils.css.CSSRule.MEDIA_RULE:
-                pass
+                if styles.get('@media') is None: styles['@media'] = []
+                styles['@media'].append(rule.cssText)
             
             elif rule.type==cssutils.css.CSSRule.PAGE_RULE:
-                pass
-            
+                if styles.get('@page') is None: styles['@page'] = []
+                styles['@page'].append(rule.cssText)
+
             elif rule.type==cssutils.css.CSSRule.STYLE_RULE:
                 for selector in rule.selectorList:
                     sel = selector.selectorText
                     if sel not in styles:
                         styles[sel] = Class.styleProperties(rule.style)
             
-            elif rule.type==cssutils.css.CSSRule.COMMENT:
+            elif rule.type==cssutils.css.CSSRule.CHARSET_RULE:
+                styles['@charset'] = rule.encoding
+
+            elif rule.type==cssutils.css.CSSRule.COMMENT:   # comments are thrown away
                 pass
-            
+
             elif rule.type==cssutils.css.CSSRule.VARIABLES_RULE:
                 pass
             
