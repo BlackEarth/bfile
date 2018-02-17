@@ -13,7 +13,7 @@ class PDF(File):
         gs = (gs or self.gs or 'gs')
         # count the number of pages
         if fn is None: 
-            fn = os.path.splitext(self.fn)[0] + GS_DEVICE_EXTENSIONS[device]
+            fn = os.path.splitext(self.fn)[0] + DEVICE_EXTENSIONS[device]
         fn = File(fn=fn).fn     # normalize path
         if os.path.splitext(self.fn)[-1].lower()=='.pdf':
             cmd = [gs, '-q', '-dNODISPLAY', '-c', 
@@ -47,7 +47,7 @@ class PDF(File):
         fns = glob(re.sub('%\d+d','*', fn))
         return fns
 
-GS_DEVICE_EXTENSIONS = {
+DEVICE_EXTENSIONS = {
     'png16m':'.png', 
     'png256':'.png', 
     'png16':'.png', 
@@ -57,13 +57,13 @@ GS_DEVICE_EXTENSIONS = {
     'pnggray':'.png',
     'jpeg':'.jpg', 
     'jpeggray':'.jpg',
-    'tiffgray':'.tiff', 
-    'tiff12nc':'.tiff', 
-    'tiff24nc':'.tiff', 
-    'tiff48nc':'.tiff', 
-    'tiff32nc':'.tiff', 
-    'tiff64nc':'.tiff', 
-    'tiffsep':'.tiff', 
+    'tiff48nc':'.tiff',     # rgb, 16bit per channel
+    'tiff24nc':'.tiff',     # rgb, 8bit per channel
+    'tiff12nc':'.tiff',     # rgb, 4bit per channel
+    'tiffgray':'.tiff',     # grayscale, 8bit per channel
+    'tiff64nc':'.tiff',     # cmyk, 16bit
+    'tiff32nc':'.tiff',     # cmyk, 8bit
+    'tiffsep':'.tiff',      # cmyk separation into 4 files + 1 composite
     'tiffsep1':'.tiff', 
     'tiffscaled':'.tiff', 
     'tiffscaled4':'.tiff', 
@@ -77,8 +77,15 @@ GS_DEVICE_EXTENSIONS = {
     'tifflzw':'.tiff', 
     'tiffpack':'.tiff', 
     'txtwrite':'.txt',
-    'psdcmyk':'.psd', 
     'psdrgb':'.psd',
+    'psdcmyk':'.psd', 
     'pdfwrite':'.pdf',
 }
-
+EXTENSION_DEVICES = {
+    key:[val for val in DEVICE_EXTENSIONS.keys() if DEVICE_EXTENSIONS[val]==key]
+    for key in
+    list(set(DEVICE_EXTENSIONS.values()))
+}
+EXTENSION_DEVICES_PRIMARY = {
+    key:vals[0] for key,vals in EXTENSION_DEVICES.items()
+}
