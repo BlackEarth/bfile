@@ -15,6 +15,7 @@ class PDF(File):
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + DEVICE_EXTENSIONS[device]
         fn = File(fn=fn).fn     # normalize path
+        log.debug("PDF.gswrite():\n\tself.fn = %s\n\tout fn = %s" % (self.fn, fn))
         if os.path.splitext(self.fn)[-1].lower()=='.pdf':
             cmd = [gs, '-q', '-dNODISPLAY', '-c', 
                     "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]
@@ -29,6 +30,12 @@ class PDF(File):
             n = len(re.split('.', str(pages))) - 1
             counter = "-%%0%dd" % n
             fn = fb + counter + ext
+
+            # remove any existing output filenames that match the pattern
+            for existingfn in glob(fb+'*'+ext):
+                log.debug("REMOVING %s" % existingfn)
+                os.remove(existingfn)
+
         callargs = [gs, '-q', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox',
                     '-sDEVICE=%s' % device, '-r%d' % res]
         if device=='jpeg': 
@@ -44,7 +51,8 @@ class PDF(File):
         except subprocess.CalledProcessError as e:
             log.error(callargs)
             log.error(str(e.output, 'utf-8'))
-        fns = glob(re.sub('%\d+d','*', fn))
+        fns = sorted(glob(re.sub('%\d+d','*', fn)))
+        log.debug('\n\t'+'\n\t'.join(fns))
         return fns
 
 DEVICE_EXTENSIONS = {
