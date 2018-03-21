@@ -20,8 +20,10 @@ class Image(File):
         o = subprocess.check_output(args).decode('utf8')
         return o.strip()
 
-    def gm(self, cmd, **params):
+    def gm(self, cmd, quiet=True, **params):
         args = ['gm', cmd]
+        # if quiet not in [False, None]:
+        #     args.append('-silent')
         for key in params.keys():
             args += ['-'+key]
             if str(params[key]) != "":
