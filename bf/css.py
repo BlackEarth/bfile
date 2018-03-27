@@ -86,7 +86,7 @@ class CSS(File):
                 ])
             log.debug(selector)
         
-        path = cssselect.CSSSelector(selector, namespaces=xmlns).path
+        path = cssselect.GenericTranslator().css_to_xpath(selector)
         path = path.replace("descendant-or-self::", "")
         path = path.replace("/descendant::", "//")
         
