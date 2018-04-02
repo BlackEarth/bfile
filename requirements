@@ -1,4 +1,4 @@
 #!/bin/bash
 cd `dirname $0`; 
 source venv
-pip freeze | egrep "(cssselect|cssutils|libsass|six|Unum|bl)" >requirements.txt
+pip freeze | egrep --invert-match "bf\.git" >requirements.txt
