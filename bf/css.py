@@ -26,9 +26,12 @@ class CSS(File):
     em = Unum.unit('em', 12.*pt)        # but em is variable to the font-size of the context.
     rem = Unum.unit('rem', 12.*pt)
     en = Unum.unit('en', 6.*pt)
+    ex = Unum.unit('ex', 1.*en)
     inch = Unum.unit('in', 72.*pt)
     pi = Unum.unit('pi', 12.*pt)
     percent = Unum.unit('%', 0.01*em)
+
+    units = {'pt':pt, 'px':px, 'em':em, 'rem':rem,'ex':ex,'in':inch,'pi':pi,'%':percent}
 
     def __init__(self, fn=None, styles=None, text=None, encoding='UTF-8', **args):
         File.__init__(self, fn=fn, encoding=encoding, **args)
@@ -78,7 +81,7 @@ class CSS(File):
             log.debug(selector)
 
         if xmlns is not None:
-            prefix = xmlns.keys()[0]
+            prefix = list(xmlns.keys())[0]
             href = xmlns[prefix]
             selector = ' '.join([
                 (n.strip() != '>' and prefix + '|' + n.strip() or n.strip())
@@ -89,6 +92,7 @@ class CSS(File):
         path = cssselect.GenericTranslator().css_to_xpath(selector)
         path = path.replace("descendant-or-self::", "")
         path = path.replace("/descendant::", "//")
+        path = path.replace('/*/', '//')
         
         log.debug(' ==> %s' % path)
         
