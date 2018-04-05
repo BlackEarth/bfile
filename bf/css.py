@@ -22,7 +22,7 @@ class CSS(File):
         All the main units are supported and are defined in terms of points, with 1.0em = 12.0pt
     """
     pt = Unum.unit('pt')
-    px = Unum.unit('px', 0.75*pt)
+    px = Unum.unit('px', 1.0*pt)
     em = Unum.unit('em', 12.*pt)        # but em is variable to the font-size of the context.
     rem = Unum.unit('rem', 12.*pt)
     en = Unum.unit('en', 6.*pt)
