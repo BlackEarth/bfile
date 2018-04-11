@@ -21,7 +21,8 @@ class Image(File):
         return o.strip()
 
     def gm(self, cmd, quiet=True, **params):
-        args = ['gm', cmd]
+        _gm = os.environ.get('gm') or 'gm'
+        args = [_gm, cmd]
         # if quiet not in [False, None]:
         #     args.append('-silent')
         for key in params.keys():

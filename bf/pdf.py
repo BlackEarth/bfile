@@ -10,7 +10,7 @@ class PDF(File):
 
     def gswrite(self, fn=None, device='jpeg', res=600, alpha=4, quality=90, gs=None):
         "use ghostscript to create output file(s) from the PDF"
-        gs = (gs or self.gs or 'gs')
+        gs = (gs or self.gs or os.environ.get('gs') or 'gs')
         # count the number of pages
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + DEVICE_EXTENSIONS[device]
