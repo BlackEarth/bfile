@@ -91,9 +91,9 @@ class Styles(Dict):
                 for i in styles[k]:
                     s += k + ' ' 
                     if type(i) in [str, String]:
-                        s += i + ' '
+                        s += i + ';\n'
                     if type(i) == bytes:
-                        s += str(i, 'utf-8') + ' '
+                        s += str(i, 'utf-8') + ';\n'
                     elif type(i) in [dict, Dict]:
                         # recurse
                         s += '{\n' + C.render(i, margin=margin+indent, indent=indent) + '}\n'
