@@ -3,7 +3,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import os, re, shutil
-import cssselect
+import cssselect, cssutils
 from unum import Unum       # pip install unum
 from bl.file import File
 from bl.url import URL
@@ -65,6 +65,17 @@ class CSS(File):
                     for prop in [prop for prop in css.styles[sel] if prop not in stylesheet.styles[sel]]:
                         stylesheet.styles[sel][prop] = css.styles[sel][prop]
         return stylesheet
+
+    @classmethod
+    def all_selectors(Class, fn):
+        """return a sorted list of selectors that occur in the stylesheet"""
+        selectors = []
+        cssparser = cssutils.CSSParser(validate=False)
+        css = cssparser.parseFile(fn)
+        for rule in [r for r in css.cssRules if type(r)==cssutils.css.CSSStyleRule]:
+            selectors += [sel.selectorText for sel in rule.selectorList]
+        selectors = sorted(list(set(selectors)))
+        return selectors
 
     @classmethod
     def selector_to_xpath(cls, selector, xmlns=None):

@@ -12,7 +12,6 @@ class SCSS(CSS):
 
     def render_css(self, fn=None, text=None, margin='', indent='\t'):
         """output css using the Sass processor"""
-        from .css import CSS
         fn = fn or os.path.splitext(self.fn)[0]+'.css'
         if not os.path.exists(os.path.dirname(fn)):
             os.makedirs(os.path.dirname(fn))
