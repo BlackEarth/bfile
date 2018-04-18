@@ -44,6 +44,10 @@ class CSS(File):
         else:
             self.styles = Styles()
 
+    @property
+    def text(self):
+        return self.render_styles()
+
     def render_styles(self, margin='', indent='\t'):
         return Styles.render(self.styles, margin=margin, indent=indent)
 
