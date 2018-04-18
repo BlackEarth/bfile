@@ -35,7 +35,7 @@ class Styles(Dict):
             
             elif rule.type==cssutils.css.CSSRule.IMPORT_RULE:
                 if styles.get('@import') is None: styles['@import'] = []
-                styles['@import'].append(Dict(href=rule.href))
+                styles['@import'].append(Dict(url=rule.href))
 
             elif rule.type==cssutils.css.CSSRule.NAMESPACE_RULE:
                 if styles.get('@namespace') is None: styles['@namespace'] = {}
@@ -78,6 +78,11 @@ class Styles(Dict):
         from unum import Unum
         s = ""
         # render the css text
+        if '@import' in styles.keys():
+            imports = styles.pop('@import')
+            for i in [i for i in imports if i.get('url') not in [None, '']]:
+                s += '%s@import url(%s);\n' % (margin, i['url'])
+            s += '\n'
         for k in styles.keys():
             s += margin + k + ' '
             if type(styles[k]) == Unum:
@@ -86,7 +91,7 @@ class Styles(Dict):
                 s += styles[k] + ';'
             elif type(styles[k]) in [dict, Dict]:
                 # recurse
-                s += '{\n' + C.render(styles[k], margin=margin, indent=indent) + '}\n'
+                s += '{\n' + C.render(styles[k], margin=margin+indent, indent=indent) + '}\n'
             elif type(styles[k]) in [tuple, list]:
                 for i in styles[k]:
                     if type(i) in [str, String]:
