@@ -42,7 +42,7 @@ class Image(File):
 
     def convert(self, outfn=None, **params):
         if outfn is not None and File(fn=outfn).fn != self.fn:
-            shutil.copy(self.fn, outfn)
+            self.write(outfn=outfn)
         else:
             outfn = self.fn
         res = Image(fn=outfn).mogrify(**params)
