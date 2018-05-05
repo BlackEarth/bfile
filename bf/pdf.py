@@ -20,7 +20,9 @@ class PDF(File):
             cmd = [gs, '-q', '-dNODISPLAY', '-c', 
                     "(%s) (r) file runpdfbegin pdfpagecount = quit" % self.fn]
             log.debug(cmd)
-            pages = int(subprocess.check_output(cmd).decode('utf-8').strip())
+            out = subprocess.check_output(cmd).decode('utf-8').strip()
+            if out=='': out = '1'
+            pages = int(out)
             log.debug("%d page(s)" % pages)
         else:
             pages = 1
