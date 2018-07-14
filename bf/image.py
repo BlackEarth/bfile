@@ -23,8 +23,6 @@ class Image(File):
     def gm(self, cmd, quiet=True, **params):
         _gm = os.environ.get('gm') or 'gm'
         args = [_gm, cmd]
-        # if quiet not in [False, None]:
-        #     args.append('-silent')
         for key in params.keys():
             args += ['-'+key]
             if str(params[key]) != "":
