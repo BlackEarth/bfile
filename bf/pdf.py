@@ -15,6 +15,8 @@ class PDF(File):
         if fn is None: 
             fn = os.path.splitext(self.fn)[0] + DEVICE_EXTENSIONS[device]
         fn = File(fn=fn).fn     # normalize path
+        if not os.path.exists(os.path.dirname(fn)):
+            os.makedirs(os.path.dirname(fn))
         log.debug("PDF.gswrite():\n\tself.fn = %s\n\tout fn = %s" % (self.fn, fn))
         if os.path.splitext(self.fn)[-1].lower()=='.pdf':
             cmd = [gs, '-q', '-dNODISPLAY', '-c', 
