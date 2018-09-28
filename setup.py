@@ -1,7 +1,7 @@
 
 config = {
   "name": "bf",
-  "version": "1.8.3",
+  "version": "1.8.5",
   "description": "File interface library",
   "url": "https://github.com/BlackEarth/bf",
   "author": "Sean Harrison",
