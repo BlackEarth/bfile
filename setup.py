@@ -1,16 +1,16 @@
 
 config = {
   "name": "bf",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "description": "File interface library",
   "url": "https://github.com/BlackEarth/bf",
   "author": "Sean Harrison",
-  "author_email": "sah@blackearthgroup.com",
-  "license": "LGPL 3.0",
+  "author_email": "sah@bookgenesis.com",
+  "license": "MPL 2.0",
   "classifiers": [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
     "Programming Language :: Python :: 3"
   ],
   "entry_points": {},
@@ -33,7 +33,7 @@ from codecs import open
 
 path = os.path.dirname(os.path.abspath(__file__))
 
-with open(os.path.join(path, 'README.rst'), encoding='utf-8') as f:
+with open(os.path.join(path, 'README.md'), encoding='utf-8') as f:
     read_me = f.read()
 
 setup(
