@@ -44,6 +44,17 @@ class CSS(File):
         else:
             self.styles = Styles()
 
+    @classmethod
+    def to_unit(C, val, unit=None):
+        """convert a string measurement to a Unum"""
+        md = re.match(r'^(?P<num>[\d\.]+)(?P<unit>.*)$', val)
+        if md is not None:
+            un = float(md.group('num')) * CSS.units[md.group('unit')]
+            if unit is not None:
+                return un.asUnit(unit)
+            else:
+                return un
+
     @property
     def text(self):
         return self.render_styles()
