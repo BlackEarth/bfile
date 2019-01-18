@@ -55,6 +55,12 @@ class CSS(File):
             else:
                 return un
 
+    @classmethod
+    def unit_string(C, unum):
+        n = unum.asNumber()
+        u = unum.strUnit()
+        return "%.2f%s" % (n, u)
+
     @property
     def text(self):
         return self.render_styles()
