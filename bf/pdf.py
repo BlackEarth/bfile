@@ -55,7 +55,7 @@ class PDF(File):
         except subprocess.CalledProcessError as e:
             log.error(callargs)
             log.error(str(e.output, 'utf-8'))
-        fns = sorted(glob(re.sub('%\d+d','*', fn)))
+        fns = sorted(glob(re.sub(r'%\d+d','*', fn)))
         log.debug('\n\t'+'\n\t'.join(fns))
         return fns
 
