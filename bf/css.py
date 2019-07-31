@@ -1,8 +1,7 @@
-
 import logging
 log = logging.getLogger(__name__)
 
-import os, re, shutil
+import os, re, shutil, sys
 import cssselect, cssutils
 from unum import Unum       # pip install unum
 from bl.file import File
@@ -156,3 +155,8 @@ class CSS(File):
         return ("%2s%2s%2s" % 
                 (hex(int(r)).lstrip('0x'), hex(int(g)).lstrip('0x'), hex(int(b)).lstrip('0x'))
             ).replace(' ', '0').upper()
+
+if __name__=='__main__':
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'merge':
+            CSS.merge_stylesheets(*sys.argv[2:]).write()
